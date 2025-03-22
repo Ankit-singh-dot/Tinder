@@ -1,27 +1,24 @@
 const express = require("express");
-const User = require("./models/user");
 const connectDB = require("./config/database");
-
+const User = require("./models/user");
 const app = express();
-app.use(express.json()); 
 app.post("/signup", async (req, res) => {
- 
-  // creating a user instance of user model
-  const user = new User(
-    {firstName: "ankit",
-    lastName: "singh",
-    emailId: "hat_na_laude",}
-  );
+  const id = {
+    firstName: "Ankit",
+    secondName: "singh",
+    emailID: "@chala_ja_bsdk",
+  };
+  const user = new User(id);
   await user.save();
-  res.send("user successfully");
+  res.send("yeh lo ho gaya ");
 });
 connectDB()
-  .then((result) => {
-    console.log("db connect successfully");
+  .then(() => {
+    console.log("database connection done ");
     app.listen(8000, () => {
-      console.log("SAY my name");
+      console.log("this is me listening from the port 8000");
     });
   })
   .catch((err) => {
-    console.error("db not connected successfully");
+    console.error("connection lost ");
   });
