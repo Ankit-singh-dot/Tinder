@@ -1,13 +1,46 @@
 const mongoose = require("mongoose");
-const userSchema = mongoose.Schema({
-  firstName: {
-    type: String,
+const userSchema = new mongoose.Schema(
+  {
+    firstName: {
+      type: String,
+      required: true,
+      // index: true,
+      unique: true,
+    },
+    age: {
+      type: Number,
+      min: 18,
+    },
+    lastName: String,
+    emailId: {
+      type: String,
+      required: true,
+      // index: true,
+      unique: true,
+      trim: true,
+    },
+    relationshipStatus: String,
+    photoUrl: {
+      type: String,
+      default:
+        "https://img.freepik.com/free-psd/contact-icon-illustration-isolated_23-2151903337.jpg?t=st=1742851179~exp=1742854779~hmac=01f1c879c031ac3c977f62bb0774fedeeb6f068b617a4aa2c6bce9a1f28ac4cd&w=1380",
+    },
+    Skills: {
+      type: [String],
+    },
+    About: {
+      type: String,
+      default: "this is the default about of the user",
+    },
+    Gender: {
+      type: String,
+      validate(value) {
+        if (!["male", "female", "others"].includes(value)) {
+          throw new Error("gender data is not valid ");
+        }
+      },
+    },
   },
-  lastName: {
-    type: String,
-  },
-  emailID: {
-    type: String,
-  },
-});
-module.exports = mongoose.model("user", userSchema);
+  { timestamps: true }
+);
+module.exports = mongoose.model("User", userSchema);

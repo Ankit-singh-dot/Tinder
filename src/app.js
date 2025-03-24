@@ -1,60 +1,59 @@
 const express = require("express");
 const connectDB = require("./config/database");
 const User = require("./models/user");
-
 const app = express();
 app.use(express.json());
 app.post("/signup", async (req, res) => {
-  console.log(req.body);
-
   const user = new User(req.body);
-  await user.save();
-  res.send("yeh lo ho gaya ");
+  try {
+    await user.save();
+    res.send("data added successfully");
+  } catch (error) {
+    res.status(400).send(error.message);
+  }
+  // await user.save();
+  // res.send("data added successfully");
 });
 // get user by emailId
 app.get("/user", async (req, res) => {
   const userEmail = req.body.emailId;
-
   try {
-    const user = await User.find({ emailID: userEmail });
+    const user = await User.find({ emailId: userEmail });
     res.send(user);
   } catch (error) {
     res.status(400).send("something went wrong");
   }
 });
-// delete user by id
 app.get("/delete", async (req, res) => {
   const userid = req.body._id;
   try {
     const user = await User.findByIdAndDelete(userid);
     res.send("user successfully deleted ");
   } catch (error) {
-    res.status(400).send("something went wrong");
+    res.send(400).send("something went wrong");
   }
 });
-// update data of the user
-app.patch("/user", async (req, res) => {
+// update user by id
+app.patch("/update", async (req, res) => {
   const userId = req.body._id;
   const data = req.body;
   try {
-    await User.findByIdAndUpdate({ _id: userId }, data);
+    const user = await User.findByIdAndUpdate({ _id: userId }, data, {
+      returnDocument: "after",
+      runValidators: true,
+    });
     res.send("done");
   } catch (error) {
-    res.status(400).send("something went wrong");
+    res.status(400).send(error.message);
   }
-});
-// feed api
-app.get("/feed", async (req, res) => {
-  const users = await User.find({});
-  res.send(users);
 });
 connectDB()
   .then(() => {
-    console.log("database connection done ");
-    app.listen(8000, () => {
-      console.log("this is me listening from the port 8000");
+    console.log("DB connected successfully");
+    app.listen(4000, () => {
+      console.log("listing to the port 4000");
     });
   })
-  .catch((err) => {
-    console.error("connection lost ");
+  .catch(() => {
+    console.error("unable to connect to the database ");
   });
