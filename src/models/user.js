@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+const validator = require("validator");
 const userSchema = new mongoose.Schema(
   {
     firstName: {
@@ -18,6 +19,11 @@ const userSchema = new mongoose.Schema(
       // index: true,
       unique: true,
       trim: true,
+      validate(value) {
+        if (!validator.isEmail(value)) {
+          throw new Error("Invalid email address"+value);
+        }
+      },
     },
     relationshipStatus: String,
     photoUrl: {
