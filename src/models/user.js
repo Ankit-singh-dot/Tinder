@@ -21,7 +21,7 @@ const userSchema = new mongoose.Schema(
       trim: true,
       validate(value) {
         if (!validator.isEmail(value)) {
-          throw new Error("Invalid email address"+value);
+          throw new Error("Invalid email address" + value);
         }
       },
     },
@@ -45,6 +45,10 @@ const userSchema = new mongoose.Schema(
           throw new Error("gender data is not valid ");
         }
       },
+    },
+    password: {
+      type: String,
+      required: true,
     },
   },
   { timestamps: true }
