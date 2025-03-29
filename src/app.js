@@ -17,7 +17,7 @@ app.post("/signup", async (req, res) => {
     // encrypting the password
     const { firstName, lastName, emailId, password } = req.body;
     const passwordHash = await bcrypt.hash(password, 10);
-    console.log(passwordHash);
+    // console.log(passwordHash);
 
     const user = new User({
       firstName,
@@ -43,12 +43,12 @@ app.post("/login", async (req, res) => {
     const isPasswordValid = await bcrypt.compare(password, user.password);
     if (isPasswordValid) {
       // creating a JWT token
-      const token = await jwt.sign({ _id: user._id }, "Ankit@123", {
-        expiresIn: "1d",
-      });
-      console.log(token);
+      const token = await user.getJWT();
+      // console.log(token);
 
-      res.cookie("token", token);
+      res.cookie("token", token, {
+        maxAge: 7 * 24 * 60 * 60 * 1000,
+      });
       res.send("Login successfully");
     } else {
       throw new Error("invalid credential");
